@@ -10,6 +10,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 public class FlatColoredBlocksUtil {
     public static final Color WHITE = new Color();
 
@@ -28,11 +30,8 @@ public class FlatColoredBlocksUtil {
     }
 
     public static MutableComponent getColorName(ItemStack itemStack) {
-        Integer color = itemStack.get(FlatColoredBlocksComponents.COLOR_COMPONENT);
-        Color mainColor = new Color();
-        if (color != null) {
-            mainColor = new Color(color);
-        }
+        Integer color = Objects.requireNonNullElse(itemStack.get(FlatColoredBlocksComponents.COLOR_COMPONENT), 0xFFFFFF);
+        Color mainColor = new Color(color);
         MutableComponent component = Component.translatable("color.flatcoloredblocks.__default__prefixed");
         if (mainColor.equals(WHITE)) {
             component = Component.translatable("color.flatcoloredblocks.white");

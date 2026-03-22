@@ -1,6 +1,5 @@
 package mod.flatcoloredblocks.fabric.client.datagen.providers;
 
-import mod.flatcoloredblocks.fabric.FlatColoredBlocks;
 import mod.flatcoloredblocks.fabric.registry.block.FlatColoredBlockRegistry;
 import mod.flatcoloredblocks.fabric.registry.util.tags.FlatColoredBlocksItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

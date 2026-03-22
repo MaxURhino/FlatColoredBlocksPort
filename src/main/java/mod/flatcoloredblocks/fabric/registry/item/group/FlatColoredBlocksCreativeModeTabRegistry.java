@@ -26,11 +26,17 @@ public class FlatColoredBlocksCreativeModeTabRegistry {
     );
 
     private static void addRowOfColorsForItemGroup(ItemLike item, CreativeModeTab.Output output) {
-        addRowOfColorsForItemGroup(new ItemStack(item), output);
+        addRowOfColorsForItemGroup(new ItemStack(item), output, false);
     }
 
-    private static void addRowOfColorsForItemGroup(ItemStack item, CreativeModeTab.Output output) {
-        output.accept(item.getItem());
+    private static void addRowOfColorsForItemGroup(ItemStack item, CreativeModeTab.Output output, boolean shouldAddAmount) {
+        output.accept(Util.make(() -> {
+            ItemStack itemStack = new ItemStack(item.getItem());
+            if (shouldAddAmount) {
+                itemStack.set(FlatColoredBlocksComponents.AMOUNT, 0);
+            }
+            return itemStack;
+        }));
         output.accept(Util.make(() -> {
             ItemStack itemStack = item.copy();
             itemStack.set(FlatColoredBlocksComponents.COLOR_COMPONENT, 0xFF0000);
@@ -106,7 +112,9 @@ public class FlatColoredBlocksCreativeModeTabRegistry {
                                 itemStack.set(FlatColoredBlocksComponents.AMOUNT, 200);
                                 return itemStack;
                             }
-                            ), output);
+                            ), output, true);
+
+                            output.accept(FlatColoredBlockRegistry.COLORER);
                         })
                         .build()
         );

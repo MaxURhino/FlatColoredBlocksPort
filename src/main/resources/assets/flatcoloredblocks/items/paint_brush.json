@@ -1,0 +1,26 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "flatcoloredblocks:amount",
+    "cases": [
+      {
+        "when": 0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "flatcoloredblocks:item/paint_brush"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "flatcoloredblocks:item/paint_brush_full",
+      "tints": [
+        {
+          "type": "flatcoloredblocks:color",
+          "color": -1
+        }
+      ]
+    }
+  }
+}

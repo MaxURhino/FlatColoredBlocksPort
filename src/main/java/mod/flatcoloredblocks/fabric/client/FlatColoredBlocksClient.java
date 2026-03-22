@@ -5,13 +5,17 @@ import mod.flatcoloredblocks.fabric.registry.block.FlatColoredBlockRegistry;
 import mod.flatcoloredblocks.fabric.registry.block.entity.FlatColoredBlocksBlockEntities;
 import mod.flatcoloredblocks.fabric.registry.block.entity.renderer.type.*;
 import mod.flatcoloredblocks.fabric.registry.block.entity.type.*;
+import mod.flatcoloredblocks.fabric.registry.item.FlatColoredBlocksItemRegistry;
 import mod.flatcoloredblocks.fabric.registry.util.*;
+import mod.flatcoloredblocks.fabric.registry.util.screen.screens.ColorerBlockScreen;
+import mod.flatcoloredblocks.fabric.registry.util.screen.screens.FlatColoredBlocksMenuTypes;
 import mod.flatcoloredblocks.fabric.registry.util.tags.FlatColoredBlocksItemTags;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.network.chat.Component;
@@ -37,6 +41,7 @@ public class FlatColoredBlocksClient implements ClientModInitializer {
         // Block Entity Renderer
         BlockEntityRenderers.register(FlatColoredBlocksBlockEntities.COLORED_CONCRETE_BLOCK_ENTITY, ColoredConcreteBlockEntityRenderer::new);
         BlockEntityRenderers.register(FlatColoredBlocksBlockEntities.PAINTING_BASIN_BLOCK_ENTITY, PaintingBasinBlockEntityRenderer::new);
+        BlockEntityRenderers.register(FlatColoredBlocksBlockEntities.COLORER_BLOCK_ENTITY, ColorerBlockEntityRenderer::new);
     }
 
     private void initializeItems() {
@@ -45,7 +50,14 @@ public class FlatColoredBlocksClient implements ClientModInitializer {
         // Item Tooltip
         ItemTooltipCallback.EVENT.register(((stack, context, type, lines) -> {
             Integer color = stack.get(FlatColoredBlocksComponents.COLOR_COMPONENT);
-            if ((!stack.is(FlatColoredBlocksItemTags.COLORED_BLOCKS)) && color == null) return;
+            if (stack.is(FlatColoredBlocksItemRegistry.PAINT_BRUSH)) {
+                var amount = stack.get(FlatColoredBlocksComponents.AMOUNT);
+                if (amount != null) {
+                    if (amount == 0) return;
+                }
+            } else {
+                if ((!stack.is(FlatColoredBlocksItemTags.COLORED_BLOCKS)) && color == null) return;
+            }
             FlatColoredBlocksUtil.Color mainColor = FlatColoredBlocksUtil.WHITE;
             if (color != null)
                 mainColor = new FlatColoredBlocksUtil.Color(color);
@@ -59,5 +71,7 @@ public class FlatColoredBlocksClient implements ClientModInitializer {
     public void onInitializeClient() {
         initializeBlocks();
         initializeItems();
+
+        MenuScreens.register(FlatColoredBlocksMenuTypes.COLORER, ColorerBlockScreen::new);
     }
 }

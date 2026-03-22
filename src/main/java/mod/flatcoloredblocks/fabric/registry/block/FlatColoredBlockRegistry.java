@@ -51,6 +51,13 @@ public class FlatColoredBlockRegistry {
             BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()
     );
 
+
+    public static final Block COLORER = register(
+            "colorer",
+            ColorerBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
+    );
+
     private static Block registerColorable(String name, Function<BlockBehaviour.Properties, Block> blockFactory, BlockBehaviour.Properties settings, boolean shouldRegisterItem) {
         ResourceKey<Block> blockKey = keyOfBlock(name);
         Block block = blockFactory.apply(settings.setId(blockKey));
