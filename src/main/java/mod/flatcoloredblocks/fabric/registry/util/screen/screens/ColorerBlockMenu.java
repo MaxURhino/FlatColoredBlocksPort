@@ -1,16 +1,24 @@
 package mod.flatcoloredblocks.fabric.registry.util.screen.screens;
 
+import mod.flatcoloredblocks.fabric.registry.util.FlatColoredBlocksComponents;
+import mod.flatcoloredblocks.fabric.registry.util.FlatColoredBlocksUtil;
+import mod.flatcoloredblocks.fabric.registry.util.tags.FlatColoredBlocksItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
 public class ColorerBlockMenu extends AbstractContainerMenu {
-    private static final int CONTAINER_SIZE = 9;
+    private static final int CONTAINER_SIZE = 2;
+    private final Container resultContainer = new SimpleContainer(1);
     private final Container container;
+    private final CraftingContainer craftingContainer;
+    private final Player player;
+
+    //public boolean colorChanged = false;
+    //public FlatColoredBlocksUtil.Color newColor = FlatColoredBlocksUtil.RED;
 
     // Client-side constructor
     public ColorerBlockMenu(final int containerId, final Inventory inventory) {
@@ -22,20 +30,17 @@ public class ColorerBlockMenu extends AbstractContainerMenu {
         super(FlatColoredBlocksMenuTypes.COLORER, containerId);
         checkContainerSize(container, CONTAINER_SIZE);
         this.container = container;
+        this.player = inventory.player;
 
         // Some containers do custom logic when opened by a player.
-        container.startOpen(inventory.player);
+        container.startOpen(this.player);
 
-        int rows = 3;
-        int columns = 3;
+        this.craftingContainer = new TransientCraftingContainer(this, 1, 1);
 
-        // Add the slots for our container in a 3x3 grid.
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < columns; x++) {
-                int slot = x + y * 3;
-                this.addSlot(new Slot(container, slot, 62 + x * 18, 17 + y * 18));
-            }
-        }
+        this.addSlot(new Slot(this.craftingContainer, 0, 35, 35));
+        this.addSlot(new Slot(this.container, 0, 134, 8));
+
+        this.addSlot(new ResultSlot(this.player, this.craftingContainer, this.resultContainer, 0, 116, 44));
 
         // Add the player inventory slots.
         this.addStandardInventorySlots(inventory, 8, 84);
@@ -72,5 +77,28 @@ public class ColorerBlockMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return container.stillValid(player);
+    }
+
+    @Override
+    public void slotsChanged(Container container) {
+        if (container == craftingContainer) {
+            if (container.getItem(0).is(FlatColoredBlocksItemTags.COLORED_BLOCKS)) {
+                ItemStack item = container.getItem(0).copy();
+                item.set(FlatColoredBlocksComponents.COLOR_COMPONENT, 0xFF0000);
+                resultContainer.setItem(0, item);
+            }
+        }
+        /*
+        else if (container == this.container) {
+            if (container.getItem(0).is(FlatColoredBlocksItemTags.COLORED_BLOCKS)) {
+                ItemStack item = container.getItem(0).copy();
+                Integer itemColor = item.get(FlatColoredBlocksComponents.COLOR_COMPONENT);
+                if (itemColor != null) {
+                    colorChanged = true;
+                    newColor = FlatColoredBlocksUtil.Color.fromARGB(itemColor);
+                }
+            }
+        }
+         */
     }
 }

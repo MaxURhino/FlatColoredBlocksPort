@@ -105,11 +105,23 @@ public class FlatColoredBlocksUtil {
             return new Vec3i(red, green, blue);
         }
 
+        public static int toARGB(int r, int g, int b) {
+            return new Color(r, g, b).getColorAsARGB();
+        }
+
         public int getColorAsRgb() {
             int rgb = red;
             rgb = (rgb << 8) + green;
             rgb = (rgb << 8) + blue;
             return rgb;
+        }
+
+        public int getColorAsARGB() {
+            return getColorAsRgb() - 16777216;
+        }
+
+        public static Color fromARGB(int argb) {
+            return new Color(argb - 16777216);
         }
 
         @Override

@@ -37,7 +37,7 @@ public class ColorerBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NonNull BlockPos pos, @NonNull BlockState state) {
-        return null;
+        return new ColorerBlockEntity(pos, state);
     }
 
     @Override
@@ -59,12 +59,8 @@ public class ColorerBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (level instanceof ServerLevel serverLevel) {
-            MenuProvider menuProvider = this.getMenuProvider(state, level, pos);
-            if (menuProvider != null) {
-                player.openMenu(menuProvider);
-                System.out.println("Welcome from the screen!");
-            }
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ColorerBlockEntity colorer) {
+            player.openMenu(colorer);
         }
 
         return InteractionResult.SUCCESS;
