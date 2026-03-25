@@ -26,6 +26,10 @@ public class ColorerBlockMenu extends AbstractContainerMenu {
         this(containerId, inventory, new SimpleContainer(CONTAINER_SIZE));
     }
 
+    public CraftingContainer getCraftingContainer() {
+        return craftingContainer;
+    }
+
     // Server-side constructor
     public ColorerBlockMenu(final int containerId, final Inventory inventory, final Container container) {
         super(FlatColoredBlocksMenuTypes.COLORER, containerId);
@@ -106,10 +110,10 @@ public class ColorerBlockMenu extends AbstractContainerMenu {
                 Integer intColor = item.get(FlatColoredBlocksComponents.COLOR_COMPONENT);
                 if (intColor != null) {
                     FlatColoredBlocksUtil.Color color = new FlatColoredBlocksUtil.Color(intColor);
-                    colorRed.  set(color.red());
+                    colorRed.set(color.red());
                     colorGreen.set(color.green());
-                    colorBlue. set(color.blue());
-                    System.out.println("Setting!");
+                    colorBlue.set(color.blue());
+                    slotsChanged(craftingContainer); // <-- re-trigger result calculation with new color
                 }
             }
         }

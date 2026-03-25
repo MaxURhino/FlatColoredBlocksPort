@@ -4,8 +4,10 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.mojang.datafixers.util.Pair;
 import mod.flatcoloredblocks.fabric.FlatColoredBlocks;
 import mod.flatcoloredblocks.fabric.registry.util.FlatColoredBlocksUtil;
+import mod.flatcoloredblocks.fabric.registry.util.packets.SetColorPacket;
 import mod.flatcoloredblocks.fabric.registry.util.screen.components.DrawableScreenComponent;
 import mod.flatcoloredblocks.fabric.registry.util.screen.components.texture.TextureInfo;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -105,6 +107,8 @@ public class ColorerBlockScreen extends AbstractContainerScreen<ColorerBlockMenu
             menu.colorGreen.set(color.green());
             menu.colorBlue.set(color.blue());
 
+            sendColorToServer();
+
             redSlider.setXFromNormalized(menu.colorRed.get() / 255f);
             greenSlider.setXFromNormalized(menu.colorGreen.get() / 255f);
             blueSlider.setXFromNormalized(menu.colorBlue.get() / 255f);
@@ -173,6 +177,7 @@ public class ColorerBlockScreen extends AbstractContainerScreen<ColorerBlockMenu
                 this.redSlider.setHolding(true);
 
                 menu.colorRed.set(Math.round(this.redSlider.getXAbsoluteToBorderPlacement() * 255));
+                sendColorToServer();
             } else {
                 this.redSlider.setHolding(false);
             }
@@ -188,6 +193,7 @@ public class ColorerBlockScreen extends AbstractContainerScreen<ColorerBlockMenu
                 this.greenSlider.setHolding(true);
 
                 menu.colorGreen.set(Math.round(this.greenSlider.getXAbsoluteToBorderPlacement() * 255));
+                sendColorToServer();
             } else {
                 this.greenSlider.setHolding(false);
             }
@@ -203,6 +209,7 @@ public class ColorerBlockScreen extends AbstractContainerScreen<ColorerBlockMenu
                 this.blueSlider.setHolding(true);
 
                 menu.colorBlue.set(Math.round(this.blueSlider.getXAbsoluteToBorderPlacement() * 255));
+                sendColorToServer();
             } else {
                 this.blueSlider.setHolding(false);
             }
@@ -245,5 +252,13 @@ public class ColorerBlockScreen extends AbstractContainerScreen<ColorerBlockMenu
 
         // Main text
         gfx.drawString(font, text, x, y, color, bl);
+    }
+
+    private void sendColorToServer() {
+        ClientPlayNetworking.send(new SetColorPacket(
+                menu.colorRed.get(),
+                menu.colorGreen.get(),
+                menu.colorBlue.get()
+        ));
     }
 }
