@@ -10,17 +10,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.dialog.input.TextInput;
 import net.minecraft.world.entity.player.Inventory;
 import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public class ColorerBlockScreen extends AbstractContainerScreen<ColorerBlockMenu> {
     private static final Identifier CONTAINER_TEXTURE = FlatColoredBlocks.id("textures/gui/container/colorer.png");
